@@ -12,7 +12,8 @@
     "clean": "rimraf www/ || true",
     "build-dev" : "npm run clean && tsc && cp package.json www\\package.json && mkdir www\\tmp\\ && 7z a Archive.zip www",
     "build": "npm run clean && tsc && cp package.json www/package.json && mkdir www/tmp/ && cd www && zip -r Archive.zip . && cd ..",
-    "dev": "ts-node-dev --respawn --transpile-only ./src/server.ts"
+    "dev": "ts-node-dev --respawn --transpile-only ./src/server.ts",
+    "web": "node server.js"
   },
   "repository": {
     "type": "git",
