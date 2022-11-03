@@ -9,24 +9,6 @@ import Jimp from 'jimp'
 // RETURNS
 //    an absolute path to a filtered image locally saved file
 export async function filterImageFromURL(inputURL: string): Promise<string> {
-
-
-    // return new Promise((resolve, reject) => {
-    //     Jimp.read(inputURL).then(photo => {
-    //         const outpath = '/tmp/filtered.' + Math.floor(Math.random() * 2000) + '.jpg';
-    //         photo
-    //             .resize(256, 256) // resize
-    //             .quality(60) // set JPEG quality
-    //             .greyscale() // set greyscale
-    //             .write(__dirname + outpath, (img) => {
-    //                 resolve(__dirname + outpath);
-    //             });
-    //     }).catch(err => {
-    //         console.error(err);
-    //         reject(err);
-    //     })
-    // });
-
     return new Promise(async (resolve: Function, reject: Function) => {
         try {
             const photo = await Jimp.read(inputURL);
