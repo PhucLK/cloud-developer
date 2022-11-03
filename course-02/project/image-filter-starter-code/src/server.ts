@@ -1,6 +1,8 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
-import { filterImageFromURL, deleteLocalFiles, isValidImageUrl } from './util/util';
+import { filterImageFromURL, deleteLocalFiles } from './util/util';
+const isImageUrl = require('is-image-url');
+
 
 (async () => {
 
@@ -33,32 +35,29 @@ import { filterImageFromURL, deleteLocalFiles, isValidImageUrl } from './util/ut
 
   // Root Endpoint
   // Displays a simple message to the user
-  app.get("/", async (req, res) => {
+  app.get("/", async (req: Request, res: Response) => {
     res.send("try GET /filteredimage?image_url={{}}")
   });
 
 
-  app.get("/filteredimage", async (req, res) => {
-    console.log('get request .....');
-    const image_url = req.query['image_url']
-    console.log(image_url);
-
+  app.get("/filteredimage", async (req: Request, res: Response) => {
+    const image_url = req.query.image_url;
     try {
-      if (image_url || isValidImageUrl(image_url)) {
-        const response_url = await filterImageFromURL(image_url)
-        
-        res.send(response_url)
-        deleteLocalFiles([response_url].flat())
-      } else {
-        res.status(422).send({ "message": "Valid URL must be provided" })
+      if (!image_url) {
+        return res.status(442).send({ message: 'Valid Image URL must be provide' });
       }
+      if (!isImageUrl(image_url)) {
+        return res.status(442).send({ message: 'Valid Image URL must be provide' });
+      }
+      let filtered_image_url = await filterImageFromURL(image_url);
+      res.sendFile(filtered_image_url, () =>
+        deleteLocalFiles([filtered_image_url])
+      );
     } catch (error) {
-      console.log(error)
-      res.status(422).send(
-        { "message": "Valid URL must be provided" }
-      )
+      res.status(500).send({ message: 'Cant handle the request!' })
     }
   });
+
 
 
   // Start the Server
