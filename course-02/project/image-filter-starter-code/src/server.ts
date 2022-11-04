@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
-import { filterImageFromURL, deleteLocalFiles } from './util/util';
+import { filterImageFromURL, deleteLocalFiles, verifySecretToken } from './util/util';
 const isImageUrl = require('is-image-url');
 
 
@@ -41,15 +41,20 @@ const isImageUrl = require('is-image-url');
 
 
   app.get("/filteredimage", async (req: Request, res: Response) => {
-    const image_url = req.query.image_url;
+
+    const image_url: string = req.query.image_url;
+    const filtered_image_url = await filterImageFromURL(image_url);
+
     try {
+      if (!verifySecretToken(req)) {
+        res.status(403).send({ message: 'Invalid token!' });
+      }
       if (!image_url) {
-        return res.status(442).send({ message: 'Valid Image URL must be provide' });
+        res.status(442).send({ message: 'Valid Image URL must be provide' });
       }
       if (!isImageUrl(image_url)) {
-        return res.status(442).send({ message: 'Valid Image URL must be provide' });
+        res.status(442).send({ message: 'Valid Image URL must be provide' });
       }
-      let filtered_image_url = await filterImageFromURL(image_url);
       res.sendFile(filtered_image_url, () =>
         deleteLocalFiles([filtered_image_url])
       );
