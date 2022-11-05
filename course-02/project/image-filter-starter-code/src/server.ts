@@ -43,21 +43,21 @@ const isImageUrl = require('is-image-url');
   app.get("/filteredimage", async (req: Request, res: Response) => {
 
     const image_url: string = req.query.image_url;
-    const filtered_image_url: string = await filterImageFromURL(image_url);
-
     try {
       if (!verifySecretToken(req)) {
         res.status(403).send({ message: 'Invalid token!' });
+      } else {
+        const filtered_image_url: string = await filterImageFromURL(image_url);
+        if (!image_url) {
+          res.status(442).send({ message: 'Valid Image URL must be provide' });
+        }
+        if (!isImageUrl(image_url)) {
+          res.status(442).send({ message: 'Valid Image URL must be provide' });
+        }
+        res.sendFile(filtered_image_url, () =>
+          deleteLocalFiles([filtered_image_url])
+        );
       }
-      if (!image_url) {
-        res.status(442).send({ message: 'Valid Image URL must be provide' });
-      }
-      if (!isImageUrl(image_url)) {
-        res.status(442).send({ message: 'Valid Image URL must be provide' });
-      }
-      res.sendFile(filtered_image_url, () =>
-        deleteLocalFiles([filtered_image_url])
-      );
     } catch (error) {
       res.status(500).send({ message: 'Cant handle the request!' })
     }
