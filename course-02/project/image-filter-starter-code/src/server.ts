@@ -43,7 +43,7 @@ const isImageUrl = require('is-image-url');
   app.get("/filteredimage", async (req: Request, res: Response) => {
 
     const image_url: string = req.query.image_url;
-    const filtered_image_url = await filterImageFromURL(image_url);
+    const filtered_image_url: string = await filterImageFromURL(image_url);
 
     try {
       if (!verifySecretToken(req)) {
