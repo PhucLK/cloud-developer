@@ -43,6 +43,6 @@ export async function deleteLocalFiles(files: Array<string>): Promise<void> {
 
 
 export function verifySecretToken(req: Request): Boolean {
-    const token: string = req.headers.authorization.split(' ')[1]
+    const token: string = req.headers.authorization.split(' ')[1] || ''
     return token === process.env.SECRET_TOKEN
 }
