@@ -48,3 +48,9 @@ Prevent requests without valid authentication headers.
 
 Add your own domain name and have it point to the running services (try adding a subdomain name to point to the processing server)
 > !NOTE: Domain names are not included in AWS’ free tier and will incur a cost.
+
+
+## Eb command 
+eb init : init EB application ( It will be genertate config.yml in .elasticbeanstalk folder which contain some configuration)
+eb create : create environment for application
+eb deploy : deploy eb environment , application, and .zip file into AWS ElasticBeanstalk
